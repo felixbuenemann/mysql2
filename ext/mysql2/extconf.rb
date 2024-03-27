@@ -110,6 +110,9 @@ mysql_h = [prefix, 'mysql.h'].compact.join('/')
 # to retain compatibility with the typedef in earlier MySQLs.
 have_type('my_bool', mysql_h)
 
+# detect mysql functions
+have_func('mysql_ssl_set', mysql_h)
+
 # These gcc style flags are also supported by clang and xcode compilers,
 # so we'll use a does-it-work test instead of an is-it-gcc test.
 gcc_flags = ' -Wall -funroll-loops'
