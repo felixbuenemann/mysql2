@@ -20,7 +20,7 @@ module Mysql2
     end
 
     def sql_state=(state)
-      @sql_state = ''.respond_to?(:encode) ? state.encode(ENCODE_OPTS) : state
+      @sql_state = ''.respond_to?(:encode) ? state.encode(**ENCODE_OPTS) : state
     end
 
     private
@@ -56,10 +56,10 @@ module Mysql2
       return message if !message.respond_to?(:encoding)
 
       if @server_version && @server_version > 50500
-        message.encode(ENCODE_OPTS)
+        message.encode(**ENCODE_OPTS)
       else
         if message.respond_to? :scrub
-          message.scrub(REPLACEMENT_CHAR).encode(ENCODE_OPTS)
+          message.scrub(REPLACEMENT_CHAR).encode(**ENCODE_OPTS)
         else
           # This is ugly as hell but Ruby 1.9 doesn't provide a way to clean a string
           # and retain it's valid UTF-8 characters, that I know of.
@@ -72,7 +72,7 @@ module Mysql2
               new_message << REPLACEMENT_CHAR
             end
           end
-          new_message.encode(ENCODE_OPTS)
+          new_message.encode(**ENCODE_OPTS)
         end
       end
     end
