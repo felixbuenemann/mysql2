@@ -686,7 +686,7 @@ static VALUE rb_query(VALUE self, VALUE sql, VALUE current) {
   args.wrapper = wrapper;
 
 #ifndef _WIN32
-  rb_rescue2(do_send_query, (VALUE)&args, disconnect_and_raise, self, rb_eException, (VALUE)0);
+  rb_rescue2((VALUE (*)(VALUE))do_send_query, (VALUE)&args, (VALUE (*)(VALUE, VALUE))disconnect_and_raise, self, rb_eException, (VALUE)0);
 
   if (rb_hash_aref(current, sym_async) == Qtrue) {
     return Qnil;
@@ -694,7 +694,7 @@ static VALUE rb_query(VALUE self, VALUE sql, VALUE current) {
     async_args.fd = wrapper->client->net.fd;
     async_args.self = self;
 
-    rb_rescue2(do_query, (VALUE)&async_args, disconnect_and_raise, self, rb_eException, (VALUE)0);
+    rb_rescue2((VALUE (*)(VALUE))do_query, (VALUE)&async_args, (VALUE (*)(VALUE, VALUE))disconnect_and_raise, self, rb_eException, (VALUE)0);
 
     return rb_mysql_client_async_result(self);
   }
